@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { getArticles, deleteArticle, getAuthors } from '../services/dataService';
 import { Article, Category, Author } from '../types';
 import { Link } from 'react-router-dom';
-import { Plus, Search, Trash2, Edit2, Filter } from 'lucide-react';
+import { Plus, Search, Trash2, Edit2, Filter, AlertCircle } from 'lucide-react';
 
 const ArticlesList: React.FC = () => {
   const [articles, setArticles] = useState<Article[]>([]);
   const [authors, setAuthors] = useState<Author[]>([]);
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [searchTerm, setSearchTerm] = useState('');
+  const [deletedCount, setDeletedCount] = useState(0);
 
   const loadData = () => {
     setArticles(getArticles());
@@ -19,10 +20,12 @@ const ArticlesList: React.FC = () => {
     loadData();
   }, []);
 
-  const handleDelete = (id: string) => {
-    if (confirm('¿Estás seguro de que quieres eliminar esta noticia?')) {
+  const handleDelete = (id: string, title: string) => {
+    // Confirmación estricta
+    if (confirm(`¿ATENCIÓN: Estás seguro de que quieres eliminar la noticia: "${title}"?\n\nEsta acción no se puede deshacer localmente.`)) {
       deleteArticle(id);
       loadData();
+      setDeletedCount(prev => prev + 1);
     }
   };
 
@@ -53,6 +56,17 @@ const ArticlesList: React.FC = () => {
           Nueva Noticia
         </Link>
       </div>
+
+      {/* Aviso de cambios pendientes al borrar */}
+      {deletedCount > 0 && (
+          <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg flex items-start gap-3 animate-fade-in text-yellow-800">
+              <AlertCircle className="flex-shrink-0 mt-0.5" />
+              <div>
+                  <p className="font-bold">Has eliminado noticias localmente.</p>
+                  <p className="text-sm">Para que desaparezcan de la página web real, recuerda ir al Panel Principal y pulsar <span className="font-bold">"Publicar cambios en la Web"</span>.</p>
+              </div>
+          </div>
+      )}
 
       {/* Filters Bar */}
       <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 items-center">
@@ -140,7 +154,7 @@ const ArticlesList: React.FC = () => {
                           <Edit2 size={18} />
                         </Link>
                         <button 
-                          onClick={() => handleDelete(article.id)}
+                          onClick={() => handleDelete(article.id, article.title)}
                           className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                           title="Eliminar"
                         >

@@ -47,4 +47,5 @@ export interface AppSettings {
   repoOwner: string; // Tu usuario de GitHub
   repoName: string;  // El nombre de tu repositorio
   filePath: string;  // Ruta donde se guardará el JSON (ej: public/data/noticias.json)
+  repoBranch?: string; // Rama del repositorio (main, master, etc)
 }

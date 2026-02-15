@@ -192,7 +192,7 @@ const ArticleForm: React.FC = () => {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red outline-none text-lg font-medium"
+            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red outline-none text-lg font-medium bg-white"
             placeholder="Escribe un titular llamativo..."
             required
           />
@@ -250,7 +250,7 @@ const ArticleForm: React.FC = () => {
                             name="bullfightLocation"
                             value={formData.bullfightLocation}
                             onChange={handleChange}
-                            className="w-full p-2 border border-orange-200 rounded focus:border-orange-500 outline-none"
+                            className="w-full p-2 border border-orange-200 rounded focus:border-orange-500 outline-none bg-white"
                             placeholder="Ej: Plaza Mayor de Ciudad Rodrigo"
                         />
                     </div>
@@ -263,7 +263,7 @@ const ArticleForm: React.FC = () => {
                             name="bullfightCattle"
                             value={formData.bullfightCattle}
                             onChange={handleChange}
-                            className="w-full p-2 border border-orange-200 rounded focus:border-orange-500 outline-none"
+                            className="w-full p-2 border border-orange-200 rounded focus:border-orange-500 outline-none bg-white"
                             placeholder="Ej: Novillos de Talavante"
                         />
                     </div>
@@ -276,7 +276,7 @@ const ArticleForm: React.FC = () => {
                         value={formData.bullfightSummary}
                         onChange={handleChange}
                         rows={3}
-                        className="w-full p-2 border border-orange-200 rounded focus:border-orange-500 outline-none resize-none"
+                        className="w-full p-2 border border-orange-200 rounded focus:border-orange-500 outline-none resize-none bg-white"
                         placeholder="Resumen general del comportamiento del ganado y la tarde..."
                     />
                 </div>
@@ -312,7 +312,7 @@ const ArticleForm: React.FC = () => {
                              <input 
                                 type="text" 
                                 placeholder="Nombre (Ej: Diego Urdiales)"
-                                className="w-full p-2 text-sm border border-gray-300 rounded"
+                                className="w-full p-2 text-sm border border-gray-300 rounded bg-white"
                                 value={newResult.bullfighter}
                                 onChange={(e) => setNewResult(prev => ({ ...prev, bullfighter: e.target.value }))}
                              />
@@ -321,7 +321,7 @@ const ArticleForm: React.FC = () => {
                              <input 
                                 type="text" 
                                 placeholder="Resultado (Ej: una oreja)"
-                                className="w-full p-2 text-sm border border-gray-300 rounded"
+                                className="w-full p-2 text-sm border border-gray-300 rounded bg-white"
                                 value={newResult.result}
                                 onChange={(e) => setNewResult(prev => ({ ...prev, result: e.target.value }))}
                              />
@@ -347,7 +347,7 @@ const ArticleForm: React.FC = () => {
             value={formData.summary}
             onChange={handleChange}
             rows={2}
-            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red outline-none"
+            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-red/20 focus:border-brand-red outline-none bg-white"
             placeholder="Breve descripción que aparecerá en la portada..."
           />
         </div>
@@ -450,6 +450,7 @@ const ArticleForm: React.FC = () => {
               <div className="flex items-center gap-1 p-2 border-b border-gray-100 bg-gray-50">
                   <button 
                     type="button" 
+                    onMouseDown={(e) => e.preventDefault()}
                     onClick={() => handleFormat('bold')} 
                     className="p-2 hover:bg-gray-200 rounded text-gray-700 transition-colors" 
                     title="Negrita"
@@ -458,6 +459,7 @@ const ArticleForm: React.FC = () => {
                   </button>
                   <button 
                     type="button" 
+                    onMouseDown={(e) => e.preventDefault()}
                     onClick={() => handleFormat('italic')} 
                     className="p-2 hover:bg-gray-200 rounded text-gray-700 transition-colors" 
                     title="Cursiva"
@@ -466,6 +468,7 @@ const ArticleForm: React.FC = () => {
                   </button>
                   <button 
                     type="button" 
+                    onMouseDown={(e) => e.preventDefault()}
                     onClick={() => handleFormat('insertUnorderedList')} 
                     className="p-2 hover:bg-gray-200 rounded text-gray-700 transition-colors" 
                     title="Lista con viñetas"
@@ -478,8 +481,12 @@ const ArticleForm: React.FC = () => {
               <div
                   ref={editorRef}
                   contentEditable
+                  suppressContentEditableWarning
                   className="w-full p-4 min-h-[300px] outline-none font-sans text-gray-700 leading-relaxed overflow-y-auto"
-                  onInput={(e) => setFormData(prev => ({ ...prev, content: e.currentTarget.innerHTML }))}
+                  onInput={(e) => {
+                      const newContent = e.currentTarget.innerHTML;
+                      setFormData(prev => ({ ...prev, content: newContent }));
+                  }}
                   style={{ minHeight: '300px' }}
               />
           </div>
